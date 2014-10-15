@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <!-- <html class="no-js"> --> <!--<![endif]-->
+  <head>
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!-- <link rel="icon" type="image/png" href="/images/favicon.png"/> -->
+    <title>Random Number Factory</title>
+    <meta name="description" content="Ross Kippenbrock's Passport Parking Entrance Exam">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- semantic ui -->
+    <link rel="stylesheet" href='css/app.css'>
+    <link rel="stylesheet" href="css/semantic.min.css">
+    <script type="text/javascript" src="js/lib/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="js/lib/semantic.min.js"></script>
+
+    <!-- js tree -->
+    <link rel="stylesheet" href="css/style.min.css" />
+    <script type="text/javascript" src="js/lib/jstree.min.js"></script>
+
+    <!-- Front End Javascript -->
+    <script src="js/index.js"></script>
+
+    <!-- Jquery Conext Menu -->
+    <script type="text/javascript" src="js/lib/context.js"></script>
+    <link rel="stylesheet" href="css/context.standalone.css" />
+
+    <!-- Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+
+
+  </head>
+
+  <body>
+
+    <div class="center">
+      
+      <div class="ui inverted menu">
+        <a class="active item" href="/">
+          <i class="folder outline icon"></i>Home
+        </a>
+        <a class="item" href="/users">
+          <i class="user icon"></i> Users
+        </a>
+
+        <div class="right menu">
+          <div class="item">
+            
+            <div class="ui left icon action input" id="userNameInputDiv">
+              <i class="user icon"></i>
+              <input type="text" placeholder="Enter a Username..." id="userNameInput">
+              <div class="ui button" id="loginButton">register</div>
+            </div>
+
+            <div id="welcomeMessage" style="display: none">
+            </div>
+
+          </div>
+        </div>
+      
+      </div>
+
+      <div>
+        {{{body}}} 
+      </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+
+
+
+
+    </script>
+
+  </body>
+</html>
