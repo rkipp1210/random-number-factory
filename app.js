@@ -8,10 +8,10 @@ var express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io')(server);
     exphbs = require('express-handlebars'),
-    mongoClient = require('mongodb').MongoClient,
-    mongoServer = require('mongodb').Server,
+    mongoose = require('mongoose');
     passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy,
+    bcrypt = require('bcrypt'),
     port = process.env.PORT || 5000;
 
 
@@ -33,15 +33,16 @@ app.use(passport.session());
 /* 
  * Database Configurations
  */
-// var dbClient = new mongoClient(new mongoServer('localhost', 27017, {
-//   socketOptions: {connectTimeoutMS: 500},
-//   poolSize: 5,
-//   auto_reconnect: true 
-//   }, {
-//     numberOfRetries: 3,
-//     retryMilliSeconds: 500
-//   }));
-// dbClient.open(funciton(err, client))
+mongoose.connect('mongodb://localhost/MyDatabase');
+
+var Schema = mongoose.Schema;
+var UserDetail = new Schema({
+      username: String,
+      password: String
+    }, {
+      collection: 'userInfo'
+    });
+var UserDetails = mongoose.model('userInfo', UserDetail);
 
 
 /*
@@ -71,7 +72,7 @@ app.get('/loginSuccess', function(req, res, next) {
 });
 
 app.get('/users', function(req, res){
-  res.render('users', {'users': usernames, 'numUsers': numUsers });
+  res.render('users.html');
 });
 
 // catch anything other uri than we specified and render the 404 page
@@ -79,7 +80,9 @@ app.get('*', function(req, res) {
   res.render('404');
 });
 
-// Login Code
+/*
+ * Passport Login Functionality
+ */
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
