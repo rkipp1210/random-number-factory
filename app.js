@@ -10,6 +10,7 @@ var express = require('express'),
     exphbs = require('express-handlebars'),
     mongoose = require('mongoose');
     passport = require('passport'),
+    espressSession = require('express-session'),
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt'),
     port = process.env.PORT || 5000;
@@ -26,24 +27,19 @@ app.engine('html', exphbs({
   extname: '.html'
 }));
 app.use(express.static(path.join(__dirname, '/public')));
+app.use
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 /* 
  * Database Configurations
  */
-mongoose.connect('mongodb://localhost/MyDatabase');
+mongoose.connect('mongodb://rkippenbrock:password@ds035750.mongolab.com:35750/random-number-factory');
 
-var Schema = mongoose.Schema;
-var UserDetail = new Schema({
-      username: String,
-      password: String
-    }, {
-      collection: 'userInfo'
-    });
-var UserDetails = mongoose.model('userInfo', UserDetail);
-
+var User = mongoose.model('User',{
+    username: String,
+    password: String
+});
 
 /*
  * Route Handling
@@ -186,5 +182,5 @@ io.on('connection', function (socket) {
 
 // Start Server
 server.listen(port, function () {
-  console.log('Server listening at port %d', port);
+  console.log('Server listening on port %d', port);
 });
