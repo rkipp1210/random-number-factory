@@ -1,29 +1,48 @@
 
 <h1 class="ui header">
-  Login
+  Create an Account
 </h1>
 
 <div class="ui centered raised segment" id="accountWall">
     <form id='signInForm' action='/login' method='POST'>
+      
       <br>
       <div class="ui focus input">
-        <input type='text' name='username' placeholder='Email'>
+        <input type='text' name='username' placeholder='Username'>
       </div>
       <br>
       <br>
+      
       <div class="ui focus input">
         <input type='password' name='password' placeholder='Password'>
       </div>
       <br>
       <br>
+
+      <div class="ui focus input">
+        <input type='email' name='email' placeholder='Email'>
+      </div>
+      <br>
+      <br>
+
+      <div class="ui focus input">
+        <input type='text' name='firstName' placeholder='First Name'>
+      </div>
+      <br>
+      <br>
+
+      <div class="ui focus input">
+        <input type='text' name='lastName' placeholder='Last Name'>
+      </div>
+      <br>
+      <br>
+      
       <div class="ui button" id="submitButton">
         Sign In
       </div>
 
     </form>
 </div>
-          
-<a href='/signup'>Create an account</a>
 
 {{#if message}}
   <h1 id="errorMessage">{{ message }}</h1>

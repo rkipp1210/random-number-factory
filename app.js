@@ -1,5 +1,5 @@
 /* 
- * Setup Server
+ * Setup Server and Dependencies
  */
 var express = require('express'),
     app = express(),
@@ -10,9 +10,10 @@ var express = require('express'),
     exphbs = require('express-handlebars'),
     mongoose = require('mongoose');
     passport = require('passport'),
-    espressSession = require('express-session'),
+    expressSession = require('express-session'),
     LocalStrategy = require('passport-local').Strategy,
     bcrypt = require('bcrypt'),
+    flash = require('connect-flash'),
     port = process.env.PORT || 5000;
 
 
@@ -27,71 +28,35 @@ app.engine('html', exphbs({
   extname: '.html'
 }));
 app.use(express.static(path.join(__dirname, '/public')));
-app.use
+app.use(expressSession({secret: 'passport-parking-test'}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 /* 
  * Database Configurations
  */
 mongoose.connect('mongodb://rkippenbrock:password@ds035750.mongolab.com:35750/random-number-factory');
 
-var User = mongoose.model('User',{
-    username: String,
-    password: String
-});
+
+// Initialize Passport
+var initPassport = require('./passport/init');
+initPassport(passport);
 
 /*
  * Route Handling
  */
-app.get('/', function(req, res){
-  res.render('index');
-});
-
-app.get('/login', function(req, res) {
-  res.render('login.html');
-});
-
-app.post('/login',
-  passport.authenticate('local', {
-    successRedirect: '/loginSuccess',
-    failureRedirect: '/loginFailure'
-  })
-);
- 
-app.get('/loginFailure', function(req, res, next) {
-  res.send('Failed to authenticate');
-});
- 
-app.get('/loginSuccess', function(req, res, next) {
-  res.send('Successfully authenticated');
-});
-
-app.get('/users', function(req, res){
-  res.render('users.html');
-});
+// Setup Router
+var routes = require('./routes/index')(passport);
+app.use('/', routes);
 
 // catch anything other uri than we specified and render the 404 page
 app.get('*', function(req, res) {
   res.render('404');
 });
 
-/*
- * Passport Login Functionality
- */
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
- 
-passport.deserializeUser(function(user, done) {
-  done(null, user);
-});
 
-passport.use(new LocalStrategy(function(username, password, done) {
-  process.nextTick(function() {
-    // Auth Check Logic
-  });
-}));
+
 
 /*
  * Socket.io Functionality

@@ -1,17 +1,18 @@
-
 {
   "name": "random-number-factory",
   "description": "ross kippenbrock random number factory",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "socket.io": "latest",
-    "express-handlebars": "latest",
+    "bcrypt-nodejs": "0.0.3",
+    "connect-flash": "^0.1.1",
     "express": "4.x",
+    "express-handlebars": "latest",
+    "express-session": "latest",
     "mongodb": "1.4.2",
     "mongoose": "3.8.8",
-    "passport": "latest", 		
+    "passport": "latest",
     "passport-local": "latest",
-    "express-session": "latest"
+    "socket.io": "latest"
   }
 }
