@@ -4,15 +4,15 @@ $(document).ready(function(){
 	// var socket = io();
 	var treeState = {};
 	var username;
-  var connected = false;
-  var numUsers = 0;
-  var $window = $(window);
-  var $usernameInput = $('#userNameInput');
-  var $welcomeMessage = $('#welcomeMessage');
-  var $userNameInputDiv = $('#userNameInputDiv');
+	var connected = false;
+	var numUsers = 0;
+	var $window = $(window);
+	var $usernameInput = $('#userNameInput');
+	var $welcomeMessage = $('#welcomeMessage');
+	var $userNameInputDiv = $('#userNameInputDiv');
 
 	/*
-  // JS Tree Code
+  	// JS Tree Code
 	*/
 	// Create a jstree instance
 	$('#jstree').jstree({
@@ -43,7 +43,7 @@ $(document).ready(function(){
 	});
 
 	/*
-  // Right Click Code
+  	// Right Click Code
 	*/
 	context.init({
 		faceSpeed: 100,
