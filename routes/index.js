@@ -16,7 +16,7 @@ module.exports = function(passport){
 	/* GET login page. */
 	router.get('/', function(req, res) {
     	// Display the Login page with any flash message, if any
-		res.render('login', { message: req.flash('message') });
+		res.render('index', { message: req.flash('message') });
 	});
 
 	/* Handle Login POST */
@@ -40,7 +40,7 @@ module.exports = function(passport){
 
 	/* GET Home Page */
 	router.get('/home', isAuthenticated, function(req, res){
-		res.render('index', { user: req.user });
+		res.render('home', { user: req.user });
 	});
 
 	/* Handle Logout */
@@ -51,3 +51,8 @@ module.exports = function(passport){
 
 	return router;
 }
+
+
+
+
+
