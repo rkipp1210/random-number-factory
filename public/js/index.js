@@ -29,7 +29,7 @@ $(document).ready(function(){
 	$('#jstree').on("changed.jstree", function (e, data) {
 	  jsonData = $('#jstree').jstree("get_json");
 	  console.log(jsonData);
-		socket.emit('tree change', jsonData);
+		// socket.emit('tree change', jsonData);
 	});
 
 	$('#jstree').on("create_node.jstree", function(e, data) {
