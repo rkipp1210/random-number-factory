@@ -17,12 +17,13 @@ $(document).ready(function(){
 	// Create a jstree instance
 	$('#jstree').jstree({
 		'core' : {
-	      'data' : [
-	        {"id" : 1, "text" : "Root Node"},
-	        {"id" : 2, "text" : "Node 2"},
-	      ]
-	    },
-  		"plugins" : ["dnd", "state"]
+			'check_callback': true,
+      'data' : [
+        {"id" : 1, "text" : "Root Node"},
+        {"id" : 2, "text" : "Node 2"},
+      ]
+    },
+		"plugins" : ["dnd", "state"]
 	});
 
 	// listen for jstree events
@@ -58,9 +59,13 @@ $(document).ready(function(){
 		header: 'Edit Number Tree'
 	},
 	{
+		divider: true
+	},
+	{
 		text: 'Delete Factory',
-		href: '/',
-		target: '_blank'
+		action: function(e) {
+			console.log(this.innerHTML);
+		}
 	},
 	{
 		text: 'Add New Factory',
@@ -69,8 +74,10 @@ $(document).ready(function(){
 	},
 	{
 		text: 'Generate Random Numbers',
-		href: '/',
-		target: '_blank'
+		action: function(e) {
+			var number = prompt("Please enter the amount of random numbers you wish to generate");
+			console.log(number);
+		}
 	}
 
 	];
