@@ -39,13 +39,26 @@
     <div class="center">
       
       <div class="ui inverted menu">
+        <!-- Left Menu Items -->
         <a class="active item" href="/">
           <i class="folder outline icon"></i>Home
         </a>
         <a class="item" href="/users">
           <i class="user icon"></i> Users
         </a>
-      
+
+        <!-- Right Menu Items -->
+        <div class="ui inverted right menu">
+          {{#if user}}
+            <div class="item">
+              Hello, {{user.firstName}}!
+            </div>
+            <a href="/signout" class="item">
+              <i class="user icon"></i> Logout
+            </a>
+          {{/if}}
+        </div>
+
       </div>
 
       <div>
