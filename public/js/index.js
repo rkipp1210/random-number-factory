@@ -12,15 +12,73 @@ $(document).ready(function(){
 	var $userNameInputDiv = $('#userNameInputDiv');
 
 	/*
-  	// JS Tree Code
+  // home.html javascript
 	*/
+
+	// Register the modal, but keep it hidden
+	$('.modal').modal('hide');
+  
+  // On the modal button click
+  $('#modalOkayButton').click(function() {
+    // Get the user input
+    var str = $('#randNumField').val();
+    // Check the user input
+    var numGen = Number(str)
+
+    if (numGen == NaN) {
+    	alert('Try again, and input a valid number between 1 and 15, please!');
+    	$('.modal').modal('show');
+
+    } else {
+    	// We have a valid number, but check if it's an integer between 1 and 15
+    	if (numGen < 15 && numGen > 0 && numGen % 1 == 0) {
+    		generateNumbers(numGen);
+    	} else {
+    		alert('Try again, and input a valid number between 1 and 15, please!');
+    		$('.modal').modal('show');
+    	}
+    }
+
+    console.log('generate: ' + numGen + ' random numbers, please!');
+  });
+
+  function getRandomInt(min, max) {
+  	return Math.floor(Math.random() * (max - min + 1) + min);
+	}
+
+  // Function to generate random numbers for a factory
+  function generateNumbers(numGen) {
+  	var treeID = $('#jstree').jstree().get_selected();
+  	// THESE NEED TO BE PICKED OUT OF THE FACTORY NAME
+  	var lowerBound = 10;
+  	var upperBound = 100;
+  	var randomNum = 0;
+  	for (i = 0; i < numGen; i++) {
+  		randomNum = getRandomInt(lowerBound, upperBound);
+  		$('#jstree').jstree().create_node(treeID, {"type":"file", "text": String(randomNum)});
+  	}
+
+  };
+
+
+	/*
+  // JS Tree Code
+	*/
+
+	function delete_node(id) {
+		if (id != "1") {
+			$('#jstree').jstree().delete_node(id)
+		} else {
+			alert('That\'s the root node! You can\'t delete that one!');
+		}
+	}
+
 	// Create a jstree instance
 	$('#jstree').jstree({
 		'core' : {
 			'check_callback': true,
       'data' : [
-        {"id" : 1, "text" : "Root Node"},
-        {"id" : 2, "text" : "Node 2"},
+        {"id" : 1, "text" : "Root Node", },
       ]
     },
 		"plugins" : ["dnd", "state"]
@@ -65,19 +123,36 @@ $(document).ready(function(){
 		text: 'Delete Factory',
 		action: function(e) {
 			var treeID = $('#jstree').jstree().get_selected();
-			$('#jstree').jstree().delete_node(treeID);
+			delete_node(treeID);
 		}
 	},
 	{
 		text: 'Add New Factory',
-		href: '/',
-		target: '_blank'
+		action: function(e) {
+			var treeID = $('#jstree').jstree().get_selected();
+			// Generate the random pool
+			var round = 5; // What do we want our factories to be rounded to?
+			var min = 1;
+			var max = 1000 / round;
+			var smaller = 0;
+			var larger = 0;
+			var randomNum1 = getRandomInt(min, max) * round;
+			var randomNum2 = getRandomInt(min, max) * round;
+			if (randomNum1 < randomNum2) {
+				smaller = randomNum1;
+				larger 	= randomNum2;
+			} else {
+				smaller = randomNum2;
+				larger 	= randomNum1;
+			}
+			var string = "Factory: (" + smaller + "-" + larger + ")" 
+			$('#jstree').jstree().create_node("1", {"type":"file", "text": string});
+		}
 	},
 	{
 		text: 'Generate Random Numbers',
 		action: function(e) {
-			var number = prompt("Please enter the amount of random numbers you wish to generate");
-			console.log(number);
+			$('.modal').modal('show');
 		}
 	}
 
