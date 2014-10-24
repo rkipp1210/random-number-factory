@@ -40,7 +40,7 @@ $(document).ready(function(){
 	// Add Node Button
 	$('#addNode').on('click', function () {
 	  console.log('add node button clicked');
-	  $('#jstree').jstree().create_node();
+	  $('#jstree').jstree().create_node("newNode");
 	});
 
 	/*
@@ -64,7 +64,8 @@ $(document).ready(function(){
 	{
 		text: 'Delete Factory',
 		action: function(e) {
-			console.log(this.innerHTML);
+			var treeID = $('#jstree').jstree().get_selected();
+			$('#jstree').jstree().delete_node(treeID);
 		}
 	},
 	{
