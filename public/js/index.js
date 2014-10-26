@@ -12,6 +12,7 @@ function generateNumbers(numGen) {
   
   // Only run the generator if we are in a factory (parent of current selection is the root)
   if ( $('#jstree').jstree().get_parent(treeID) == "1" ) {
+
   	// Pull the upper and lower bounds from the factory data
   	var factoryData = $('#jstree').jstree().get_json(treeID);
   	var dataStr = factoryData.data;
@@ -19,6 +20,12 @@ function generateNumbers(numGen) {
   	var lowerBound = Number(dataStringSplit[0]);
   	var upperBound = Number(dataStringSplit[1]);
   	var randomNum = 0;
+
+  	// Delete all previous numbers generated
+  	var children = $('#jstree').jstree(). get_children_dom(treeID)
+  	$.each(children, function(index, value) {
+  		$('#jstree').jstree().delete_node(children[index].id)
+  	});
   	// generate the requisite random numbers, and add them to the tree
   	for (i = 0; i < numGen; i++) {
   		randomNum = getRandomInt(lowerBound, upperBound);
@@ -65,7 +72,7 @@ function add_factory(id) {
 $(document).ready(function(){
 	
 	// Initialize Variables
-	// var socket = io();
+	var socket = io();
 	var treeState = {};
 	var username;
 	var connected = false;
@@ -75,10 +82,10 @@ $(document).ready(function(){
 	var $welcomeMessage = $('#welcomeMessage');
 	var $userNameInputDiv = $('#userNameInputDiv');
 
+
 	/*
   // home.html javascript
 	*/
-
 	// Register the modal, but keep it hidden
 	$('.modal').modal('hide');
   
@@ -106,10 +113,10 @@ $(document).ready(function(){
     console.log('generate: ' + numGen + ' random numbers, please!');
   });
 
+
 	/*
   // JS Tree Code
 	*/
-
 	// Create a jstree instance
 	$('#jstree').jstree({
 		'core' : {
@@ -118,14 +125,14 @@ $(document).ready(function(){
         {"id" : 1, "text" : "Root Node", },
       ]
     },
-		"plugins" : ["dnd", "state"]
+		"plugins" : ["state"]
 	});
 
 	// listen for jstree events
 	$('#jstree').on("changed.jstree", function (e, data) {
 	  jsonData = $('#jstree').jstree("get_json");
 	  console.log(jsonData);
-		// socket.emit('tree change', jsonData);
+		socket.emit('tree change', jsonData);
 	});
 
 
@@ -175,110 +182,24 @@ $(document).ready(function(){
 	context.attach('#jstree', menuItems);
 
 
-	// /*
-	// // Button Functions
-	// */
 
+  /*
+  // Socket.io Events
+	*/
 
- //  // Sets the client's username
- //  function setUsername () {
- //    username = cleanInput($usernameInput.val().trim());
+  // Whenever the server emits 'tree change', update the tree
+  socket.on('tree change', function (data) {
+    
+    $('jstree').jstree.destroy();
+    $('jstree').jstree({
+    	'core' : {
+				'check_callback': true,
+	      'data' : data
+	    },
+			"plugins" : ["state"]
+    });
 
- //    // If the username is valid
- //    if (username) {
+  });
 
- //    	++numUsers;
- //      $userNameInputDiv.hide();
-	// 		$welcomeMessage.append('Hello, ' + username);
- //      $welcomeMessage.show();
-
- //      // Tell the server your username
- //      socket.emit('add user', username);
- //      return true
- //    }
- //    return false
- //  }
-
- //  // Sends a chat message
- //  function sendMessage () {
- //    var message = $inputMessage.val();
- //    // Prevent markup from being injected into the message
- //    message = cleanInput(message);
- //    // if there is a non-empty message and a socket connection
- //    if (message && connected) {
- //      $inputMessage.val('');
- //      addChatMessage({
- //        username: username,
- //        message: message
- //      });
- //      // tell server to execute 'new message' and send along one parameter
- //      socket.emit('new message', message);
- //    }
- //  }
-
- //  // Log a message
- //  function log (message) {
- //    $('#feed').prepend("<li>" + message + "</li>");
- //  }
-
-
- //  // Prevents input from having injected markup
- //  function cleanInput (input) {
- //    return $('<div/>').text(input).text();
- //  }
-
- //  // Updates the typing event
- //  function updateTreeData (treeData) {
-
- //  }
-
- //  // Updates the typing event
- //  function updateTreeView (treeData) {
-
- //  }
-
-
-
-
- //  /*
- //  // Socket.io Events
-	// */
- //  // Whenever the server emits 'login', log the login message
- //  socket.on('login', function (data) {
- //    connected = true;
- //    // Display the welcome message
- //    var message = data['username'] + ' joined the app';
- //    log(message);
- //    // addParticipantsMessage(data);
- //  });
-
- //  // Whenever the server emits 'new message', update the chat body
- //  socket.on('new message', function (data) {
- //    addChatMessage(data);
- //  });
-
- //  // Whenever the server emits 'user joined', log it in the chat body
- //  socket.on('user joined', function (data) {
- //    log(data.username + ' joined');
- //    $welcomeMessage
- //    // addParticipantsMessage(data);
- //  });
-
- //  // Whenever the server emits 'user left', log it in the chat body
- //  socket.on('user left', function (data) {
- //    log(data.username + ' left');
- //    // addParticipantsMessage(data);
- //    // removeChatTyping(data);
- //  });
-
- //  // Whenever the server emits 'typing', show the typing message
- //  socket.on('typing', function (data) {
- //    addChatTyping(data);
- //  });
-
- //  // Whenever the server emits 'stop typing', kill the typing message
- //  socket.on('stop typing', function (data) {
- //    removeChatTyping(data);
- //  });
 
 });
