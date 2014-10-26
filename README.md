@@ -24,4 +24,8 @@ socket.io:
 	Chat example -> https://github.com/Automattic/socket.io/tree/master/examples/chat
 		http://socket.io/demos/chat/
 
-MongoDB
+MongoDB:
+    Documentation
+
+Mongoose:
+    Documentation
