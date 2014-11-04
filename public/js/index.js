@@ -31,6 +31,8 @@ function generateNumbers(numGen) {
   		randomNum = getRandomInt(lowerBound, upperBound);
   		$('#jstree').jstree().create_node(treeID, {"type":"file", "text": String(randomNum)});
   	}
+  	var jsonData = $('#jstree').jstree("get_json");
+  	socket.emit('tree change', jsonData);
   } else {
   	alert('You can only run the generator on a factory node!');
   }
@@ -41,6 +43,8 @@ function generateNumbers(numGen) {
 function delete_node(id) {
 	if (id != "1") {
 		$('#jstree').jstree().delete_node(id)
+		var jsonData = $('#jstree').jstree("get_json");
+  	socket.emit('tree change', jsonData);
 	} else {
 		alert('That\'s the root node! You can\'t delete that one!');
 	}
@@ -66,22 +70,15 @@ function add_factory(id) {
 	var string = "Factory: (" + smaller + "-" + larger + ")";
 	var dataString = smaller + "," + larger;
 	$('#jstree').jstree().create_node("1", {"type":"file", "text": string, "data": dataString});
-	// socket.emit('factory added');
+	//socket.emit('factory added');
+	var jsonData = $('#jstree').jstree("get_json");
+  socket.emit('tree change', jsonData);
 }
 
 $(document).ready(function(){
 	
 	// Initialize Variables
 	var socket = io();
-	var treeState = {};
-	var username;
-	var connected = false;
-	var numUsers = 0;
-	var $window = $(window);
-	var $usernameInput = $('#userNameInput');
-	var $welcomeMessage = $('#welcomeMessage');
-	var $userNameInputDiv = $('#userNameInputDiv');
-
 
 	/*
   // home.html javascript
@@ -117,21 +114,11 @@ $(document).ready(function(){
 	/*
   // JS Tree Code
 	*/
-	// Create a jstree instance
-	$('#jstree').jstree({
-		'core' : {
-			'check_callback': true,
-      'data' : [
-        {"id" : 1, "text" : "Root Node", },
-      ]
-    },
-		"plugins" : ["state"]
-	});
 
 	// listen for jstree events
 	$('#jstree').on("changed.jstree", function (e, data) {
 	  jsonData = $('#jstree').jstree("get_json");
-	  console.log(jsonData);
+	  // console.log('client sending json on tree change: ' + jsonData);
 		socket.emit('tree change', jsonData);
 	});
 
@@ -187,19 +174,6 @@ $(document).ready(function(){
   // Socket.io Events
 	*/
 
-  // Whenever the server emits 'tree change', update the tree
-  socket.on('tree change', function (data) {
-    
-    $('jstree').jstree.destroy();
-    $('jstree').jstree({
-    	'core' : {
-				'check_callback': true,
-	      'data' : data
-	    },
-			"plugins" : ["state"]
-    });
-
-  });
 
 
 });

@@ -67,13 +67,11 @@
 
     </div>
 
-
-    <script type="text/javascript">
-
-
-
-
-    </script>
+    {{#if treeObj}}
+      <script type="text/javascript">
+        var jsonObj = {{{treeObj}}}
+      </script>
+    {{/if}}
 
   </body>
 </html>

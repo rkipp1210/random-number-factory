@@ -45,8 +45,47 @@
 </div> -->
 
 
-
 <script type="text/javascript">
 
+
+$(document).ready( function() {
+
+  var treeData = {{{treeData}}}
+  console.log(treeData);
+
+  // Create a jstree instance
+  $('#jstree').jstree({
+    'core' : {
+      'check_callback': true,
+      'data' : treeData
+    },
+    "plugins" : ["state"]
+  });
+
+  /*
+  // Socket.io Events
+  */
+  var socket = io();
+
+  // Whenever the server emits 'tree server update', update the tree
+  socket.on('update', function (data) {
+    
+    console.log('client recieved tree server update: ');
+    var jsonData = JSON.parse(data.treeObject);
+    //var jsonData = data.treeObject;
+    console.log(jsonData);
+
+    $('#jstree').jstree().destroy();
+    $('#jstree').jstree({
+     'core' : {
+       'check_callback': true,
+        'data' : jsonData
+      },
+      "plugins" : ["state"]
+    });
+
+  });
+
+});
 
 </script>

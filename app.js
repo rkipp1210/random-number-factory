@@ -17,20 +17,32 @@ var server = require('http').createServer(app)
 mongoose.connect(dbConfig.url);
 var TreeObj = require('./models/factory');
 
-// if there isn't alread a tree object, create one
+// if there isn't alread a tree object, create one, otherwise just print out that we have one
 TreeObj.findOne({ 'name': 'main' }, function (err, treeObj) {
   if (err) {
     return done(err);
   } else if (!treeObj) {
     var newTree = new TreeObj();
     newTree.name = 'main';
+    newTree.jstreeObject = JSON.stringify(
+                            [{ id: "1",
+                              text: "Root Node",
+                              icon: true,
+                              li_attr: { id: "1" },
+                              a_attr: { href: "#" },
+                              state: { loaded: true, opened: false, selected: true, disabled: false },
+                              data: null,
+                              children: [] 
+                            }]);
     newTree.save();
-    console.log('created a new tree');
+    console.log('No existing tree found.  Created a new tree.');
   } else {
-    console.log('already have a tree object');
+    console.log('treeObj: ' + treeObj.jstreeObject);
+    console.log('No new tree created.  Already have a tree object.');
   }
 })
 
+treeObj = TreeObj.findOne({ 'name': 'main' });
 
 // Setup port
 app.set('port', port);
@@ -53,7 +65,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Configuring Passport
 var passport = require('passport');
 var expressSession = require('express-session');
-// TODO - Why Do we need this key ?
 app.use(expressSession({secret: 'mySecretKey'}));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -67,7 +78,7 @@ app.use(flash());
 var initPassport = require('./passport/init');
 initPassport(passport);
 
-var routes = require('./routes/routes')(passport);
+var routes = require('./routes/routes')(passport, treeObj);
 app.use('/', routes);
 
 /// catch 404 and forward to error handler
@@ -108,75 +119,31 @@ io.on('connection', function (socket) {
   // when the client emits 'tree change', this listens and executes
   socket.on('tree change', function (updateData) {
 
-    console.log(updateData);
-    socket.broadcast.emit('tree update', updateData)
-    TreeObj.findOne({ 'name': 'main' }, function (err, treeObj) {
+    // Save the tree data to the database
+    // console.log('server data recieved over socket: ' + updateData);
+
+    TreeObj.findOne({ name: 'main' }, function (err, treeObj) {
       if (err) {
+        console.log('database save problem');
         return done(err);
       } else {
-        treeObj.jstreeObject = updateData;
+        treeObj.jstreeObject = JSON.stringify(updateData);
         treeObj.save();
+        console.log('database save successful');
+        // Broadcast the new data
+        socket.emit('update', { treeObject: treeObj.jstreeObject });
+        // console.log('broadcast tree server update from server')
       }
     })
 
   });
 
 
+  // socket.on('factory created', function(numFactories) {
 
-  // // when the client emits 'add user', this listens and executes
-  // socket.on('add user', function (username) {
-
-  //   // we store the username in the socket session for this client
-  //   socket.username = username;
-
-  //   // add the client's username to the global list
-  //   usernames[username] = username;
-  //   ++numUsers;
-  //   addedUser = true;
-  //   socket.emit('login', {
-  //     numUsers: numUsers,
-  //     "username": username
-  //   });
-
-  //   // add the message to the log
-  //   ++messageID;
-  //   log[messageID] = socket.username + ' joined';
-
-  //   // echo globally (all clients) that a person has connected
-  //   socket.broadcast.emit('user joined', {
-  //     username: socket.username,
-  //     numUsers: numUsers,
-  //     logMessage: log[messageID]
-  //   });
-    
-  //   // Print it out on the server side
-  //   console.log("numUsers: " + numUsers);
-  //   console.log(username + " just joined the app");
-  //   console.log(log);
-
+  //   return numFactories;
   // });
 
-  // // when the client emits 'typing', we broadcast it to others
-  // socket.on('typing', function () {
-  //   socket.broadcast.emit('typing', {
-  //     username: socket.username
-  //   });
-  // });
-
-  // when the user disconnects.. perform this
-  // socket.on('disconnect', function () {
-  //   // remove the username from global usernames list
-  //   if (addedUser) {
-  //     delete usernames[socket.username];
-  //     --numUsers;
-
-  //     // echo globally that this client has left
-  //     socket.broadcast.emit('user left', {
-  //       username: socket.username,
-  //       numUsers: numUsers
-  //     });
-  //   }
-  // });
 
 });
 
