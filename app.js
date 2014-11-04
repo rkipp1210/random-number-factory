@@ -131,7 +131,7 @@ io.on('connection', function (socket) {
         treeObj.save();
         console.log('database save successful');
         // Broadcast the new data
-        socket.emit('update', { treeObject: treeObj.jstreeObject });
+        io.emit('update', { treeObject: treeObj.jstreeObject });
         // console.log('broadcast tree server update from server')
       }
     })

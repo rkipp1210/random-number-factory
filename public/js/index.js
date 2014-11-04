@@ -2,6 +2,14 @@
 // Functions
 */
 
+function objToStr(object) {
+	str = "";
+	for (var key in object) {
+      str = str + object[key];
+  }
+  return str;
+}
+
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -9,13 +17,14 @@ function getRandomInt(min, max) {
 // Function to generate random numbers for a factory
 function generateNumbers(numGen) {
 	var treeID = $('#jstree').jstree().get_selected();
-  
+  var socket = io();
+
   // Only run the generator if we are in a factory (parent of current selection is the root)
   if ( $('#jstree').jstree().get_parent(treeID) == "1" ) {
 
   	// Pull the upper and lower bounds from the factory data
   	var factoryData = $('#jstree').jstree().get_json(treeID);
-  	var dataStr = factoryData.data;
+  	var dataStr = objToStr(factoryData.data);
   	var dataStringSplit = dataStr.split(",");
   	var lowerBound = Number(dataStringSplit[0]);
   	var upperBound = Number(dataStringSplit[1]);
@@ -40,7 +49,7 @@ function generateNumbers(numGen) {
 };
 
 // Delete a jstree node
-function delete_node(id) {
+function delete_node(id, socket) {
 	if (id != "1") {
 		$('#jstree').jstree().delete_node(id)
 		var jsonData = $('#jstree').jstree("get_json");
@@ -51,7 +60,7 @@ function delete_node(id) {
 }
 
 // Add a factory
-function add_factory(id) {
+function add_factory(id, socket) {
 	// Generate the random pool
 	var round = 5; // What do we want our factories to be rounded to?
 	var min = 1;
@@ -100,7 +109,7 @@ $(document).ready(function(){
     } else {
     	// We have a valid number, but check if it's an integer between 1 and 15
     	if (numGen < 16 && numGen > 0 && numGen % 1 == 0) {
-    		generateNumbers(numGen);
+    		generateNumbers(numGen, socket);
     	} else {
     		alert('Try again, and input a valid number between 1 and 15, please!');
     		$('.modal').modal('show');
@@ -115,12 +124,12 @@ $(document).ready(function(){
   // JS Tree Code
 	*/
 
-	// listen for jstree events
-	$('#jstree').on("changed.jstree", function (e, data) {
-	  jsonData = $('#jstree').jstree("get_json");
-	  // console.log('client sending json on tree change: ' + jsonData);
-		socket.emit('tree change', jsonData);
-	});
+	// // listen for jstree events
+	// $('#jstree').on("changed.jstree", function (e, data) {
+	//   jsonData = $('#jstree').jstree("get_json");
+	//   // console.log('client sending json on tree change: ' + jsonData);
+	// 	socket.emit('tree change', jsonData);
+	// });
 
 
 	/*
@@ -146,7 +155,7 @@ $(document).ready(function(){
 		text: 'Delete Factory',
 		action: function(e) {
 			var treeID = $('#jstree').jstree().get_selected();
-			delete_node(treeID);
+			delete_node(treeID, socket);
 		}
 	},
 
@@ -154,7 +163,7 @@ $(document).ready(function(){
 		text: 'Add New Factory',
 		action: function(e) {
 			var treeID = $('#jstree').jstree().get_selected();
-			add_factory(treeID);
+			add_factory(treeID, socket);
 		}
 	},
 	{

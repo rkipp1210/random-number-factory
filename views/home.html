@@ -71,15 +71,17 @@ $(document).ready( function() {
   socket.on('update', function (data) {
     
     console.log('client recieved tree server update: ');
-    var jsonData = JSON.parse(data.treeObject);
+    var treeData = JSON.parse(data.treeObject);
     //var jsonData = data.treeObject;
-    console.log(jsonData);
+    console.log(treeData);
 
     $('#jstree').jstree().destroy();
+    console.log('tree destroyed')
+    // Create a jstree instance
     $('#jstree').jstree({
-     'core' : {
-       'check_callback': true,
-        'data' : jsonData
+      'core' : {
+        'check_callback': true,
+        'data' : treeData
       },
       "plugins" : ["state"]
     });
