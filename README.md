@@ -1,6 +1,6 @@
-# Ross Kippenbrock Passport Parking App #
+# Ross Kippenbrock Random Number App #
 
-This is a random number factory app to satisfy the screening exam at Passport Parking
+This is a random number factory app
 
 
 ### Sources used for assistance ###
