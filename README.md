@@ -1,8 +1,11 @@
-# **Ross Kippenbrock Random Number App** #
+# Random Number App #
 
-This is a random number factory app
+This is a random number factory app.  You create new factories that have a randomly generated range of numbers they can generate.
+
+The tree is persisted with mongodb and uses socket.io for broacasting changes to the tree to all users.
 
 ## Sources used for assistance ##
+
 ### Authentication ###
 * http://www.sitepoint.com/local-authentication-using-passport-node-js/
 * https://code.tutsplus.com/tutorials/authenticating-nodejs-applications-with-passport--cms-21619
