@@ -1,11 +1,7 @@
 <div class="ui raised segment">
-
   <div id="jstree">
-
   </div>
-
   <br>
-
 </div>
 
 <div class="ui small modal">
@@ -31,30 +27,15 @@
   </div>
 </div>
 
-<!-- Activity Feed -->
-<!-- <div class="ui small feed segment" id="userFeed">
-  <h4 class="ui header">Other User Activity</h4>
-  <div>
-    <ol id="feed">
-
-    </ol>
-  </div>
-  <div id="numUsers">
-    
-  </div>
-</div> -->
-
 
 <script type="text/javascript">
 
-var numFactories = {{{numFactories}}}
-
 $(document).ready( function() {
 
+  // Get the tree data from the GET request
   var treeData = {{{treeData}}}
-  console.log(treeData);
 
-  // Create a jstree instance
+  // Create a jstree instance with the treeData that was passed into the template
   $('#jstree').jstree({
     'core' : {
       'check_callback': true,
@@ -63,33 +44,38 @@ $(document).ready( function() {
     "plugins" : ["state"]
   });
 
+
   /*
   // Socket.io Events
   */
   var socket = io();
 
-  // Whenever the server emits 'tree server update', update the tree
+  // Whenever the server emits 'update', update the tree
   socket.on('update', function (data) {
     
-    console.log('client recieved tree server update: ');
     var treeData = JSON.parse(data.treeObject);
-    //var jsonData = data.treeObject;
-    console.log(treeData);
 
+    // Destroy the old tree and rebuild
     $('#jstree').jstree().destroy();
-    console.log('tree destroyed')
+
     // Create a jstree instance
-    $('#jstree').jstree({
-      'core' : {
-        'check_callback': true,
-        'data' : treeData
-      },
-      "plugins" : ["state"]
-    });
+    // need a timeout as jquery seems to be getting confused 
+    // accessing the tree that no longer exists
+    setTimeout(function() {
+      $('#jstree').jstree({
+        'core' : {
+          'check_callback': true,
+          'data' : treeData
+        },
+        "plugins" : ["state"]
+      });
+    }, 50);
 
   });
 
   // when the user exits the app, send the json to the DB
+  // this will ensure the state is saved before exit
+  // not perfect though, as we aren't saving each users state seperately
   window.onbeforeunload = function() {
       jsonData = $('#jstree').jstree("get_json");
       socket.emit('tree change', jsonData);
