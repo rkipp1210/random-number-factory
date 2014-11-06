@@ -2,30 +2,29 @@
 
 This is a random number factory app
 
-
-### **Sources used for assistance** ###
-**Authentication:**
+## Sources used for assistance ##
+### Authentication ###
 * http://www.sitepoint.com/local-authentication-using-passport-node-js/
 * https://code.tutsplus.com/tutorials/authenticating-nodejs-applications-with-passport--cms-21619
 * http://scotch.io/tutorials/javascript/upgrading-our-easy-node-authentication-series-to-expressjs-4-0
 * passport docs
 * http://codetheory.in/using-the-node-js-bcrypt-module-to-hash-and-safely-store-passwords/
 
-**jstree:**
+### jstree ###
 * Documentation
 
-**context.js:**
+### context.js ###
 * Documentation
 
-express:
+### express ###
 * Documentation
 
-socket.io:
+### socket.io ###
 *  Chat example -> http://socket.io/demos/chat/
 * Documentation
 
-MongoDB:
+### MongoDB ###
 * Documentation
 
-Mongoose:
+### Mongoose ###
 * Documentation
