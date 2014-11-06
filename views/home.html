@@ -47,6 +47,7 @@
 
 <script type="text/javascript">
 
+var numFactories = {{{numFactories}}}
 
 $(document).ready( function() {
 
@@ -87,6 +88,12 @@ $(document).ready( function() {
     });
 
   });
+
+  // when the user exits the app, send the json to the DB
+  window.onbeforeunload = function() {
+      jsonData = $('#jstree').jstree("get_json");
+      socket.emit('tree change', jsonData);
+  };
 
 });
 

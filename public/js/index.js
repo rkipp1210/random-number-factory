@@ -10,14 +10,21 @@ function objToStr(object) {
   return str;
 }
 
+function sendTreeUpdate() {
+	var socket = io();
+	var jsonData = $('#jstree').jstree("get_json");
+  socket.emit('tree change', jsonData);
+}
+
 function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 // Function to generate random numbers for a factory
 function generateNumbers(numGen) {
+
 	var treeID = $('#jstree').jstree().get_selected();
-  var socket = io();
+  
 
   // Only run the generator if we are in a factory (parent of current selection is the root)
   if ( $('#jstree').jstree().get_parent(treeID) == "1" ) {
@@ -40,8 +47,7 @@ function generateNumbers(numGen) {
   		randomNum = getRandomInt(lowerBound, upperBound);
   		$('#jstree').jstree().create_node(treeID, {"type":"file", "text": String(randomNum)});
   	}
-  	var jsonData = $('#jstree').jstree("get_json");
-  	socket.emit('tree change', jsonData);
+  	$('#jstree').jstree().open_node(treeID);
   } else {
   	alert('You can only run the generator on a factory node!');
   }
@@ -84,14 +90,15 @@ function add_factory(id, socket) {
   socket.emit('tree change', jsonData);
 }
 
+
+
 $(document).ready(function(){
 	
 	// Initialize Variables
 	var socket = io();
 
-	/*
-  // home.html javascript
-	*/
+
+	// Modal for generating the random numbers
 	// Register the modal, but keep it hidden
 	$('.modal').modal('hide');
   
@@ -105,7 +112,6 @@ $(document).ready(function(){
     if (numGen == NaN) {
     	alert('Try again, and input a valid integer between 1 and 15, please!');
     	$('.modal').modal('show');
-
     } else {
     	// We have a valid number, but check if it's an integer between 1 and 15
     	if (numGen < 16 && numGen > 0 && numGen % 1 == 0) {
@@ -115,22 +121,7 @@ $(document).ready(function(){
     		$('.modal').modal('show');
     	}
     }
-
-    console.log('generate: ' + numGen + ' random numbers, please!');
   });
-
-
-	/*
-  // JS Tree Code
-	*/
-
-	// // listen for jstree events
-	// $('#jstree').on("changed.jstree", function (e, data) {
-	//   jsonData = $('#jstree').jstree("get_json");
-	//   // console.log('client sending json on tree change: ' + jsonData);
-	// 	socket.emit('tree change', jsonData);
-	// });
-
 
 	/*
   // Right Click Code
@@ -178,11 +169,4 @@ $(document).ready(function(){
 	context.attach('#jstree', menuItems);
 
 
-
-  /*
-  // Socket.io Events
-	*/
-
-
-
-});
+}); // (document).ready

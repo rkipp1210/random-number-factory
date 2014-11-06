@@ -15,7 +15,7 @@ var server = require('http').createServer(app)
 
 // Connect to DB with mongoose (users)
 mongoose.connect(dbConfig.url);
-var TreeObj = require('./models/factory');
+var TreeObj = require('./models/jstree');
 
 // if there isn't alread a tree object, create one, otherwise just print out that we have one
 TreeObj.findOne({ 'name': 'main' }, function (err, treeObj) {
@@ -34,10 +34,10 @@ TreeObj.findOne({ 'name': 'main' }, function (err, treeObj) {
                               data: null,
                               children: [] 
                             }]);
+    newTree.numFactories = 0;
     newTree.save();
     console.log('No existing tree found.  Created a new tree.');
   } else {
-    console.log('treeObj: ' + treeObj.jstreeObject);
     console.log('No new tree created.  Already have a tree object.');
   }
 })

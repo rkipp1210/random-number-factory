@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var TreeObj = require('../models/factory');
+var TreeObj = require('../models/jstree');
 
 var isAuthenticated = function (req, res, next) {
 	// if user is authenticated in the session, call the next() to call the next request handler 
@@ -56,7 +56,7 @@ module.exports = function(passport, treeObj){
 	      res.send(400, error);
 	    }
 	    else {
-	      res.render('home', {user: req.user, 'treeData': treeObj.jstreeObject });
+	      res.render('home', {user: req.user, 'treeData': treeObj.jstreeObject, 'numFactories': treeObj.numFactories });
 	    }
 	  });
 
