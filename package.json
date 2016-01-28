@@ -10,9 +10,12 @@
     "express-handlebars": "latest",
     "express-session": "latest",
     "mongodb": "^1.4.2",
-    "mongoose": "3.8.8",
+    "mongoose": "latest",
     "passport": "latest",
     "passport-local": "latest",
     "socket.io": "latest"
+  },
+  "engines": {
+    "node": "0.11.16"
   }
 }
