@@ -2,7 +2,7 @@
 
 This is a random number factory app.  You create new factories that have a randomly generated range of numbers they can generate.
 
-The tree is persisted with mongodb and uses socket.io for broacasting changes to the tree to all users.
+The tree is persisted with mongodb and uses socket.io for broacasting changes in the tree to all users.
 
 ## Sources used for assistance ##
 

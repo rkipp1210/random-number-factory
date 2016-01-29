@@ -19,12 +19,12 @@ var TreeObj = require('./models/jstree');
 
 // if there isn't alread a tree object, create one, otherwise just print out that we have one
 TreeObj.findOne({ 'name': 'main' }, function (err, treeObj) {
-  if (err) {
-    return done(err);
-  } else if (!treeObj) {
-    var newTree = new TreeObj();
-    newTree.name = 'main';
-    newTree.jstreeObject = JSON.stringify(
+    if (err) {
+        return done(err);
+    } else if (!treeObj) {
+        var newTree = new TreeObj();
+        newTree.name = 'main';
+        newTree.jstreeObject = JSON.stringify(
                             [{ id: "1",
                               text: "Root Node",
                               icon: true,
@@ -34,12 +34,12 @@ TreeObj.findOne({ 'name': 'main' }, function (err, treeObj) {
                               data: null,
                               children: [] 
                             }]);
-    newTree.numFactories = 0;
-    newTree.save();
-    console.log('No existing tree found.  Created a new tree.');
-  } else {
-    console.log('No new tree created.  Already have a tree object.');
-  }
+        newTree.numFactories = 0;
+        newTree.save();
+        console.log('No existing tree found.  Created a new tree.');
+    } else {
+        console.log('No new tree created.  Already have a tree object.');
+    }
 })
 
 treeObj = TreeObj.findOne({ 'name': 'main' });
@@ -51,8 +51,8 @@ app.set('port', port);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 app.engine('html', exphbs({
-  defaultLayout: 'main',
-  extname: '.html'
+    defaultLayout: 'main',
+    extname: '.html'
 }));
 
 // app.use(favicon());
@@ -105,49 +105,27 @@ if (app.get('env') === 'development') {
  * Socket.io Functionality
  */
 var io = require('socket.io')(server);
-
-//  // Initialize variables
-// var usernames = {};
-// var numUsers = 0;
-// var userStates = {};
-// var treeState = {};
-// var log = {};
-// var messageID = -1;
-
 io.on('connection', function (socket) {
-
-  // when the client emits 'tree change', this listens and executes
-  socket.on('tree change', function (updateData) {
-
-    // Save the tree data to the database
-    // console.log('server data recieved over socket: ' + updateData);
-
-    TreeObj.findOne({ name: 'main' }, function (err, treeObj) {
-      if (err) {
-        console.log('database save problem');
-        return done(err);
-      } else {
-        treeObj.jstreeObject = JSON.stringify(updateData);
-        treeObj.save();
-        console.log('database save successful');
-        // Broadcast the new data
-        io.emit('update', { treeObject: treeObj.jstreeObject });
-        // console.log('broadcast tree server update from server')
-      }
-    })
-
-  });
-
-
-  // socket.on('factory created', function(numFactories) {
-
-  //   return numFactories;
-  // });
-
-
+    // when the client emits 'tree change', this listens and executes
+    socket.on('tree change', function (updateData) {
+        // Save the tree data to the database
+        TreeObj.findOne({ name: 'main' }, function (err, treeObj) {
+            if (err) {
+                console.log('database save problem');
+                return done(err);
+            } else {
+                treeObj.jstreeObject = JSON.stringify(updateData);
+                treeObj.save();
+                console.log('database save successful');
+                // Broadcast the new data
+                io.emit('update', { treeObject: treeObj.jstreeObject });
+                // console.log('broadcast tree server update from server')
+            }
+        })
+    });
 });
 
 // Start Server
 server.listen(port, function () {
-  console.log('Server listening at port %d', port);
+    console.log('Server listening at port %d', port);
 });
